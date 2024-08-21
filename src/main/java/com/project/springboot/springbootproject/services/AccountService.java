@@ -3,7 +3,9 @@ package com.project.springboot.springbootproject.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,14 +16,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.project.springboot.springbootproject.models.Account;
+import com.project.springboot.springbootproject.models.Authority;
 import com.project.springboot.springbootproject.repositories.AccountRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.project.springboot.springbootproject.util.constants.Roles;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AccountService implements UserDetailsService {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountService.class);
 
     @Autowired
     private AccountRepository accountRepository;
@@ -31,24 +33,32 @@ public class AccountService implements UserDetailsService {
 
     public Account save(Account account) {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
+        if (account.getRole() == null) {
+            account.setRole(Roles.USER.getRole());
+        }
         return accountRepository.save(account);
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        logger.info("Attempting to load user by email: {}", email);
         Optional<Account> optionalAccount = accountRepository.findOneByEmailIgnoreCase(email);
         if (!optionalAccount.isPresent()) {
-            logger.error("Account not found for email: {}", email);
             throw new UsernameNotFoundException("Account not found");
         }
-
         Account account = optionalAccount.get();
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("Allow"));
 
-        logger.info("User found: {}", account.getEmail());
-        logger.info("User found: {}", account.getPassword());
-        return new User(account.getEmail(), account.getPassword(), grantedAuthorities);
+        // Initialize the authorities collection
+        Hibernate.initialize(account.getAuthorities());
+
+        List<GrantedAuthority> grantedAuthority = new ArrayList<>();
+        grantedAuthority.add(new SimpleGrantedAuthority(account.getRole()));
+
+        Set<Authority> authorities = account.getAuthorities();
+        for (Authority _auth : authorities) {
+            grantedAuthority.add(new SimpleGrantedAuthority(_auth.getName()));
+        }
+
+        return new User(account.getEmail(), account.getPassword(), grantedAuthority);
     }
 }
