@@ -9,21 +9,17 @@
     <div class="bg-box">
       <img src="images/nav-bg.jpg" alt="">
     </div>
-    <header th:replace="~{/fragments/header :: header}"></header>
+    <header th:replace="~{/fragments/header :: header}">
   </div>
-
-  <!-- about section -->
 
   <section class="about_section layout_padding">
     <div class="container  ">
-      <div class="posts" th:each="post : ${posts}">
-        <h3 th:text="${post.title}">Title</h3>
-        <p th:text="${post.body}">body</p>
-        <hr />
-      </div>
+        <h3>ERROR: File not found</h3>
+        
     </div>
+
   </section>
-  <footer th:replace="~{/fragments/footer :: footer}"></footer>
+  <footer th:replace="~{/fragments/footer :: footer}">
 </body>
 
 </html>

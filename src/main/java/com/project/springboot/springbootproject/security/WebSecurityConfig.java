@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                         .authorizeHttpRequests(requests -> requests
                                         .requestMatchers(WHITELIST).permitAll()
                                         .requestMatchers("/profile/**").authenticated()
+                                        .requestMatchers("/posts/**").authenticated()
                                         .requestMatchers("/admin/**").hasRole("ADMIN")
                                         .requestMatchers("/editor/**").hasAnyRole("ADMIN", "EDITOR")
                                         .requestMatchers("/test")

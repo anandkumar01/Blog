@@ -41,16 +41,11 @@
               <a class="nav-link" th:href="@{/admin}">Admin</a>
             </li>
           </span>
-          <span sec:authorize="hasAuthority('ACCESS_ADMIN_PANEL')">
+          <!-- <span sec:authorize="hasAuthority('ACCESS_ADMIN_PANEL')">
             <li class="nav-item">
               <a class="nav-link" th:href="@{/admin}">Admin</a>
             </li>
-          </span>
-          <span sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EDITOR')">
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/editor}">Editor</a>
-            </li>
-          </span>
+          </span> -->
           <span sec:authorize="isAuthenticated()">
             <li class="nav-item">
               <a class="nav-link" th:href="@{/logout}">Logout</a>

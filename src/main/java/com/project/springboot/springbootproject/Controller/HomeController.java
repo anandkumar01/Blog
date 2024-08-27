@@ -20,11 +20,6 @@ public class HomeController {
     public String home(Model model){
         List<Post> posts = postService.getAll();
         model.addAttribute("posts", posts);
-        return "home";
-    }
-
-    @GetMapping("/editor")
-    public String editor(Model model){
-        return "editor";
+        return "home_views/home";
     }
 }
