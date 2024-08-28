@@ -10,8 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.project.springboot.springbootproject.util.constants.Privillages;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -41,9 +39,7 @@ public class WebSecurityConfig {
                                         .requestMatchers("/profile/**").authenticated()
                                         .requestMatchers("/posts/**").authenticated()
                                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                                        .requestMatchers("/editor/**").hasAnyRole("ADMIN", "EDITOR")
-                                        .requestMatchers("/test")
-                                        .hasAuthority(Privillages.ACCESS_ADMIN_PANEL.getPrivillage()))
+                                        .requestMatchers("/editor/**").hasAnyRole("ADMIN", "EDITOR"))
                         .formLogin(login -> login
                                         .loginPage("/login")
                                         .loginProcessingUrl("/login")
